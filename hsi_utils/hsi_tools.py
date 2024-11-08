@@ -295,7 +295,7 @@ class HsiReader:
             plt.xlabel("Wavelength (nm)")
             plt.ylabel("Intensity")
             plt.grid()
-            plt.show()
+            plt.show(block=False)
             
          
             
