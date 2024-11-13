@@ -65,7 +65,7 @@ for idx in range(len(dataset)):
         pca_scores_imgs.append(pca_scores_img)
     final_pca_scores_img = np.concatenate(pca_scores_imgs, axis=0)
      
-    score_pc_ref = final_pca_scores_img[:, :, 1]   
+    score_pc_ref = final_pca_scores_img[:, :, 0]   
     thresholds = threshold_multiotsu(score_pc_ref, classes=2)
     segmented = np.digitize(score_pc_ref, bins=thresholds)
     
@@ -166,16 +166,16 @@ for idx in range(len(dataset)):
     # Sort the object_data list by 'idx' for final top-left to bottom-right order
     object_data_sorted = sorted([obj for obj in object_data if 'idx' in obj], key=lambda obj: obj['idx'])
     
-    # plt.figure()
-    # plt.imshow(color_image)
-    # plt.title('Color-Mapped Labeled Image with Ordered Indices')
-    # for obj in object_data_sorted:
-    #     centroid_y, centroid_x = obj['centroid']
-    #     id = obj['idx']
-    #     plt.annotate(f"{id}", xy=(centroid_x, centroid_y), color='white', fontsize=8, 
-    #                 ha='center', va='center', fontweight='bold', bbox=dict(facecolor='black', alpha=0.5))
-    # plt.axis('off')
-    # plt.show()
+    plt.figure()
+    plt.imshow(color_image)
+    plt.title('Color-Mapped Labeled Image with Ordered Indices')
+    for obj in object_data_sorted:
+        centroid_y, centroid_x = obj['centroid']
+        id = obj['idx']
+        plt.annotate(f"{id}", xy=(centroid_x, centroid_y), color='white', fontsize=8, 
+                    ha='center', va='center', fontweight='bold', bbox=dict(facecolor='black', alpha=0.5))
+    plt.axis('off')
+    plt.show()
     
     kernel_file_path = kernel_obj_folder+ f'/{image_name}/{image_name}_kernel_objetcs.json'
     if not os.path.exists(kernel_file_path ):

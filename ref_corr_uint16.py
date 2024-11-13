@@ -118,7 +118,7 @@ for idx in range(len(dataset)):
     # plt.imshow(labeled_image)
     # plt.show(block=False)
     
-    # color_image = color_labels(labeled_image)
+    color_image = color_labels(labeled_image)
         
     # plt.figure()
     # plt.imshow(color_image)
@@ -129,15 +129,28 @@ for idx in range(len(dataset)):
     
     #get the reference object compute row average -> 1 ref spectrum per column
     reference_mask = labeled_image == 1
+
+    #check if reference is value 1 i.e in yellow and rest is value O i.e. in dark blue
+    # plt.figure()
+    # plt.imshow(reference_mask)
+    # plt.axis('off')
+    # plt.show(block=False)
+
     reference_mask=np.repeat(reference_mask[:, :, np.newaxis], hypercube.shape[2], axis=2)
     spectralon = np.where(reference_mask, hypercube, 0)
+
+    # #check spectralon
+    # plt.figure()
+    # plt.imshow(spectralon[:,:,50])
+    # plt.show()
+   
     
     avg_spectralon = np.sum(spectralon, axis=0)
     num_valid_pixels = np.sum(reference_mask, axis=0)
     avg_spectralon /= num_valid_pixels    
     avg_spectralon[num_valid_pixels == 0]  = np.nan 
             
-    hypercube = hypercube / avg_spectralon[np.newaxis, :, :]     
+    hypercube = np.divide(hypercube, avg_spectralon[np.newaxis, :, :])     
     hypercube_scaled = (hypercube * 65536).astype(np.uint16)  
 
     
@@ -147,7 +160,7 @@ for idx in range(len(dataset)):
     header_path = HSIreader.dataset[idx]['hdr']
     header = envi.read_envi_header(header_path)
     
-    envi.save_image(save_path, hypercube,ext='ref', dtype='uint16', force=True, metadata=header) 
+    envi.save_image(save_path, hypercube_scaled,ext='ref', dtype='uint16', force=True, metadata=header) 
 
     
     HSIreader.clear_cache()
