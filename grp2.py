@@ -12,7 +12,7 @@ from skimage.measure import label, regionprops
 
 
 main_data_folder = './data/data_grp2'    
-
+# './data/data_grp2/ref_corrected'  
 # Initialize the HSI dataset and define file extension: contains all paths of hdr and data files
 dataset =HsiDataset(main_data_folder,data_ext='hyspex')
 nb_images = len(dataset)

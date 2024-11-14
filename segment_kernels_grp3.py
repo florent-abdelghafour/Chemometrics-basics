@@ -270,3 +270,22 @@ plt.ylabel("PC2")
 plt.title("Score Plot PC1/PC2")
 plt.grid()
 plt.show()
+
+
+scores_non_germinated = pca_scores[np.array(label_list) == 'non-germinated']
+scores_germinated = pca_scores[np.array(label_list) == 'germinated']
+
+# Plot each label category with a separate color and label
+plt.figure()
+plt.scatter(scores_non_germinated[:, 0], scores_non_germinated[:, 1], 
+            color='green', alpha=0.6, edgecolor='k', s=50, label='non-germinated')
+plt.scatter(scores_germinated[:, 0], scores_germinated[:, 1], 
+            color='red', alpha=0.6, edgecolor='k', s=50, label='germinated')
+
+# Add labels and legend
+plt.xlabel("PC1")
+plt.ylabel("PC2")
+plt.title("Score Plot PC1/PC2")
+plt.legend()  # Automatically adds legend based on label argument in plt.scatter
+plt.grid()
+plt.show()
