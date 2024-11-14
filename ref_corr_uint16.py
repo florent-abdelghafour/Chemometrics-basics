@@ -22,13 +22,13 @@ from skimage.measure import label
 
 
 # Define the path to the main data folder: code will iterate trough relvant files
-main_data_folder = './data/img_test'    
+main_data_folder = './data/data_grp2'    
 
 # Initialize the HSI dataset and define file extension: contains all paths of hdr and data files
 dataset =HsiDataset(main_data_folder,data_ext='hyspex')
 
 # Define the path to save the corrected hyperspectral images
-save_folder = './data/img_test'   +  '/ref_corrected'
+save_folder = main_data_folder   +  '/ref_corrected'
 if not os.path.exists(save_folder):
     os.makedirs(save_folder)
 
@@ -73,6 +73,16 @@ for idx in range(len(dataset)):
     #     plt.grid()  
     # plt.show(block=False)
     
+    # plt.figure()
+    # for i in range(np.shape(pca_loadings)[1]):
+    #     lab= 'PC'+str(i+1)
+    #     plt.plot(wv,pca_loadings[:,i],default_colors[i], label=lab)
+    # plt.xlabel("Wavelength (nm)")
+    # plt.ylabel("Absorbance")  
+    # plt.grid()
+    # plt.title('Principal components')  
+    # plt.show(block=False)
+    
    
     #project back the laodings on the entire hsi to get scores
     score_img = HSIreader.project_pca_scores(pca_loadings)
@@ -89,9 +99,9 @@ for idx in range(len(dataset)):
     thresholds = threshold_multiotsu(score_pc_ref, classes=3)
     segmented = np.digitize(score_pc_ref, bins=thresholds)
     
-    # plt.figure()
-    # plt.imshow(segmented)
-    # plt.show(block=False)
+    plt.figure()
+    plt.imshow(segmented)
+    plt.show(block=False)
     
     #get a labelled image 
     labeled_image = label(segmented)

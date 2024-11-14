@@ -1,3 +1,4 @@
+import os
 import spectral.io.envi as envi
 import matplotlib.pyplot as plt
 from hsi_utils import *
@@ -9,7 +10,8 @@ from skimage.morphology import remove_small_objects
 from skimage.measure import label, regionprops
 
 
-main_data_folder = './data_g3/result/ref_corrected'    
+main_data_folder = './data/data_g3/result/ref_corrected'   
+
 
 # Initialize the HSI dataset and define file extension: contains all paths of hdr and data files
 dataset =HsiDataset(main_data_folder,data_ext='ref')
@@ -229,7 +231,22 @@ for i in range(len(object_data_sorted)):
     all_grains.append(grain)
 
 grain_matrix=np.concatenate(all_grains)
+
+label_list=[]
+for i,kernel in enumerate(all_grains):
+    dico=object_data_sorted[i]
+    coord=dico['pixels']
+    if i<4:
+        label='non-germinated'
+    else:
+        label='germinated'
+    for j in range(len(coord)):
+        label_list.append(label)
     
+    
+color_map = {'non-germinated': 'green', 'germinated': 'red'}
+colors = [color_map[label] for label in label_list]
+
 
 nb_pca_comp =3
 pca = PCA(n_components=nb_pca_comp)
@@ -237,17 +254,17 @@ pca_scores = pca.fit_transform(grain_matrix)
 pca_loadings =pca.components_.T*np.sqrt(pca.explained_variance_)
 default_colors = plt.rcParams['axes.prop_cycle'].by_key()['color']
 
-for i in range(np.shape(pca_loadings)[1]):
-    plt.figure()
-    plt.plot(wv,pca_loadings[:,i],default_colors[i])
-    plt.xlabel("Wavelength (nm)")
-    plt.ylabel("Reflectance")  
-    lab= 'PC'+str(i+1)
-    plt.title(lab) 
-    plt.grid()  
+# for i in range(np.shape(pca_loadings)[1]):
+#     plt.figure()
+#     plt.plot(wv,pca_loadings[:,i],default_colors[i])
+#     plt.xlabel("Wavelength (nm)")
+#     plt.ylabel("Reflectance")  
+#     lab= 'PC'+str(i+1)
+#     plt.title(lab) 
+#     plt.grid()  
 
 plt.figure()
-plt.scatter(pca_scores[:, 0], pca_scores[:, 1], alpha=0.6, c='blue', edgecolor='k', s=50)
+plt.scatter(pca_scores[:, 0], pca_scores[:, 1], alpha=0.6, edgecolor='k', s=50, c=colors)
 plt.xlabel("PC1")
 plt.ylabel("PC2")
 plt.title("Score Plot PC1/PC2")

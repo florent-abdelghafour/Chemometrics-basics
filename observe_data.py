@@ -8,13 +8,13 @@ from sklearn.decomposition import PCA
 
 
 # Define the path to the main data folder: code will iterate trough relvant files
-main_data_folder = './data/img_test'    
+main_data_folder = './data/data_grp2/ref_corrected'    
 
 #check if data path exists !
 print(os.path.isdir(main_data_folder))
 
 # Initialize the HSI dataset and define file extension: contains all paths of hdr and data files
-dataset =HsiDataset(main_data_folder,data_ext='hyspex') #raw files from the camera have '.hyspex' extension , corrected files have '.ref' extension
+dataset =HsiDataset(main_data_folder,data_ext='ref') #raw files from the camera have '.hyspex' extension , corrected files have '.ref' extension
 nb_images = len(dataset)
 print(f"dataset contains {nb_images} image(s)")
 
